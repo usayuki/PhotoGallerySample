@@ -7,6 +7,7 @@ import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,12 @@ class MainFragment : Fragment() {
 
     companion object {
         private const val GRID_SPAN = 3
-        fun newInstance() = MainFragment()
+        private const val IMAGES = "images"
+        fun newInstance(images: IntArray) = MainFragment().also {
+            it.arguments = bundleOf(
+                IMAGES to images
+            )
+        }
     }
 
     override fun onCreateView(
@@ -27,9 +33,10 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val images = arguments!!.getIntArray(IMAGES)
         val recyclerView = view.findViewById(R.id.recycler_thumbnail) as RecyclerView
         recyclerView.layoutManager = GridLayoutManager(requireContext(), GRID_SPAN)
-        recyclerView.adapter = RecyclerViewAdapter(object : RecyclerViewAdapter.ListListener {
+        recyclerView.adapter = RecyclerViewAdapter(images!!, object : RecyclerViewAdapter.ListListener {
             override fun onClickItem(view: View, resource: Int) {
                 val intent = Intent(requireActivity(), PreviewActivity::class.java)
                 intent.putExtra("image", resource)

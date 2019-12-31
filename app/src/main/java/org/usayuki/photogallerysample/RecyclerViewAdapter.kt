@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.recycler_view.view.*
 
-class RecyclerViewAdapter(private val listener: ListListener) : RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>() {
+class RecyclerViewAdapter(private val images: IntArray, private val listener: ListListener) : RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>() {
 
     companion object {
-        private const val ITEM_COUNT = 21
+        private const val ITEM_COUNT = 5
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
@@ -24,9 +24,9 @@ class RecyclerViewAdapter(private val listener: ListListener) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-        holder.image.setImageResource(R.mipmap.ic_launcher)
+        holder.image.setImageResource(images[position])
         holder.image.setOnClickListener {
-            listener.onClickItem(it, R.mipmap.ic_launcher)
+            listener.onClickItem(it, images[position])
         }
     }
 
