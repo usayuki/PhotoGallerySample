@@ -10,41 +10,17 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.transition.Transition
 import android.transition.TransitionValues
-import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 
 class PreviewTransition : Transition {
-    private val PROPERTY_BOUNDS = "transition:bounds"
-    private val PROPERTY_POSITION = "transition:position"
-    private val PROPERTY_IMAGE = "transition:image"
-    private val TRANSITION_PROPERTIES = arrayOf(PROPERTY_BOUNDS, PROPERTY_POSITION)
+    companion object {
+        private val PROPERTY_BOUNDS = "org.usayuki.photogallerysample:preview:bounds"
+        private val PROPERTY_POSITION = "org.usayuki.photogallerysample:preview:position"
+        private val PROPERTY_IMAGE = "org.usayuki.photogallerysample:preview:image"
+    }
 
     constructor() {}
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
-
-    override fun getTransitionProperties(): Array<String> {
-        return TRANSITION_PROPERTIES
-    }
-
-    private fun captureValues(transitionValues: TransitionValues) {
-        val view = transitionValues.view
-        transitionValues.values[PROPERTY_BOUNDS] = Rect(view.left, view.top, view.right, view.bottom)
-        val position = IntArray(2)
-        transitionValues.view.getLocationInWindow(position)
-        transitionValues.values[PROPERTY_POSITION] = position
-    }
-
-    override fun captureEndValues(transitionValues: TransitionValues?) {
-        transitionValues?.let {
-            val view = transitionValues.view
-            if (view.width <= 0 || view.height <= 0) {
-                return
-            }
-            captureValues(transitionValues)
-        }
-    }
 
     override fun captureStartValues(transitionValues: TransitionValues?) {
         transitionValues?.let {
@@ -57,6 +33,16 @@ class PreviewTransition : Transition {
             val canvas = Canvas(bitmap)
             view.draw(canvas)
             transitionValues.values[PROPERTY_IMAGE] = bitmap
+        }
+    }
+
+    override fun captureEndValues(transitionValues: TransitionValues?) {
+        transitionValues?.let {
+            val view = transitionValues.view
+            if (view.width <= 0 || view.height <= 0) {
+                return
+            }
+            captureValues(transitionValues)
         }
     }
 
@@ -102,17 +88,25 @@ class PreviewTransition : Transition {
         val animatorSet = AnimatorSet()
         animatorSet.play(moveStartView)
         animatorSet.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                startView.alpha = 0f
-                endView.alpha = 1f
-            }
-
             override fun onAnimationStart(animation: Animator?) {
                 startView.alpha = 1f
                 endView.alpha = 0f
             }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                startView.alpha = 0f
+                endView.alpha = 1f
+            }
         })
         return animatorSet
+    }
+
+    private fun captureValues(transitionValues: TransitionValues) {
+        val view = transitionValues.view
+        transitionValues.values[PROPERTY_BOUNDS] = Rect(view.left, view.top, view.right, view.bottom)
+        val position = IntArray(2)
+        transitionValues.view.getLocationInWindow(position)
+        transitionValues.values[PROPERTY_POSITION] = position
     }
 
     private fun addViewToOverlay(sceneRoot: ViewGroup, width: Int, height: Int): View {

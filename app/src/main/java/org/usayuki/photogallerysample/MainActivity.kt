@@ -6,11 +6,11 @@ import android.os.Bundle
 class MainActivity : AppCompatActivity() {
 
     private val images = intArrayOf(
-        R.drawable.usayuki,
-        R.drawable.posters,
-        R.drawable.kotlin,
-        R.drawable.swift,
-        R.drawable.usatip
+        R.mipmap.usayuki,
+        R.mipmap.posters,
+        R.mipmap.kotlin,
+        R.mipmap.swift,
+        R.mipmap.usatip
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +23,4 @@ class MainActivity : AppCompatActivity() {
             transaction.commit()
         }
     }
-
-
 }

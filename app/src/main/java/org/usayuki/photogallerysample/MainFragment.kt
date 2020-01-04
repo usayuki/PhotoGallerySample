@@ -41,9 +41,9 @@ class MainFragment : Fragment() {
                 val intent = Intent(requireActivity(), PreviewActivity::class.java)
                 intent.putExtra("image", resource)
                 val options = ActivityOptions.makeSceneTransitionAnimation(requireActivity(), Pair.create(view, "preview"))
+//                val options = ActivityOptions.makeSceneTransitionAnimation(requireActivity(), view, "preview")
                 startActivity(intent, options.toBundle())
             }
         })
-        recyclerView.setHasFixedSize(true)
     }
 }
